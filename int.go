@@ -40,3 +40,11 @@ func Perm4(n int, eval func([4]int) bool) [4]int {
 	}
 	return [4]int{-1, -1, -1, -1}
 }
+func Comb(n int, draw int) (res int) {
+	res = n
+	for i := 1; i < draw; i++ {
+		res = res * (n - i)
+	}
+
+	return res
+}
