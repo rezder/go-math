@@ -74,3 +74,23 @@ func TestPerm3(t *testing.T) {
 	}
 
 }
+func TestComb(t *testing.T) {
+	v := Comb(uint64(6), uint64(4))
+	if v != 15 {
+		t.Errorf("Something is wrong expect %v got %v", 15, v)
+	}
+}
+func TestPerm(t *testing.T) {
+	set := make(map[string]bool)
+	n := 8
+	d := 4
+	Perm(n, d, func(v []int) bool {
+		set[fmt.Sprint(v)] = true
+		return false
+	})
+	per := len(set)
+	comb := Comb(uint64(n), uint64(d))
+	if per != int(comb) {
+		t.Errorf("Something is wrong permutaions %v combinations %v", per, comb)
+	}
+}
