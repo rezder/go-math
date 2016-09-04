@@ -88,9 +88,20 @@ func TestPerm(t *testing.T) {
 		set[fmt.Sprint(v)] = true
 		return false
 	})
+
 	per := len(set)
 	comb := Comb(uint64(n), uint64(d))
 	if per != int(comb) {
 		t.Errorf("Something is wrong permutaions %v combinations %v", per, comb)
 	}
+}
+
+func TestFactorSum(t *testing.T) {
+	values := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	sum := 11
+	elements := 3
+	all := true
+	FactorSum(values, sum, elements, all)
+	all = false
+	FactorSum(values, sum, elements, all)
 }

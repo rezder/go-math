@@ -112,3 +112,29 @@ func Comb(n uint64, draw uint64) (res uint64) {
 
 	return res
 }
+
+//FactorSum finds all the possible ways to factor a sum with the numbers of elements.
+//Result indexes is nil if none was found.
+func FactorSum(values []int, sum int, elements int, all bool) (indexes [][]int) {
+	n := len(values)
+	if n >= elements {
+		Perm(n, elements, func(is []int) (stop bool) {
+			s := 0
+			for _, index := range is {
+				s = s + values[index]
+			}
+			if sum == s {
+				e := make([]int, elements)
+				for i, index := range is {
+					e[i] = index
+				}
+				indexes = append(indexes, e)
+				if !all {
+					stop = true
+				}
+			}
+			return stop
+		})
+	}
+	return indexes
+}
