@@ -1,6 +1,7 @@
 package int
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -46,7 +47,7 @@ func Perm4(n int, eval func([4]int) bool) [4]int {
 }
 func Perm(n int, d int, eval func([]int) bool) (per []int) {
 	if n < d || d < 1 || n < 1 {
-		panic("Illegal values")
+		panic(fmt.Sprintf("n: %v,d: %v", n, d))
 	}
 	per = make([]int, d)
 	for i := 0; i < d; i++ {
