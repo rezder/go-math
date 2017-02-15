@@ -2,7 +2,6 @@ package int
 
 import (
 	"fmt"
-	"math"
 )
 
 func Perm2(n int, eval func([2]int) bool) [2]int {
@@ -79,38 +78,57 @@ func Perm(n int, d int, eval func([]int) bool) (per []int) {
 	}
 	return per
 }
-func Comb(n uint64, draw uint64) (res uint64) {
-	nv := make([]uint64, draw)
-	dv := make([]uint64, draw)
-	for i := uint64(0); i < draw; i++ {
-		nv[i] = n - i
-		dv[i] = draw - i
-	}
-	res = uint64(1)
-	for _, ni := range nv {
-		r := ni
-		found := -1
-		for i, di := range dv {
-			if di != uint64(1) {
-				if math.Remainder(float64(ni), float64(di)) == 0 {
-					found = i
-					break
+func Comb(n uint64, draw uint64) (res uint64) { //TODO make a safe version. 57 over 28 look like the limit.
+	if n == draw {
+		res = 1
+	} else {
+		if n < draw {
+			panic(fmt.Sprintf("n: %v must not be smaller than m: %v", n, draw))
+		}
+		if draw > n/2 {
+			draw = n - draw
+		}
+		nv := make([]uint64, draw)
+		dv := make([]uint64, draw)
+		for i := uint64(0); i < draw; i++ {
+			nv[i] = n - i
+			dv[i] = draw - i
+		}
+		if draw > 10 {
+			res = uint64(1)
+			for _, ni := range nv {
+				r := ni
+				found := -1
+				for i := 0; i < len(dv); i++ {
+					di := dv[i]
+					if di != uint64(1) {
+						if ni%di == 0 {
+							found = i
+							break
+						}
+					}
+				}
+				if found != -1 {
+					r = ni / dv[found]
+					dv[found] = 1
+				}
+				res = res * r
+			}
+			for _, di := range dv {
+				if di != 1 {
+					res = res / di
 				}
 			}
-		}
-		if found != -1 {
-			r = ni / dv[found]
-			dv[found] = 1
-		}
-		res = res * r
-
-	}
-	for _, di := range dv {
-		if di != 1 {
-			res = res / di
+		} else {
+			res = uint64(1)
+			for _, ni := range nv {
+				res = res * ni
+			}
+			for _, di := range dv {
+				res = res / di
+			}
 		}
 	}
-
 	return res
 }
 

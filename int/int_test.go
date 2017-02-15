@@ -74,10 +74,42 @@ func TestPerm3(t *testing.T) {
 	}
 
 }
-func TestComb(t *testing.T) {
-	v := Comb(uint64(6), uint64(4))
-	if v != 15 {
-		t.Errorf("Something is wrong expect %v got %v", 15, v)
+func BenchmarkCombSmall(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Comb(uint64(7), uint64(4))
+		Comb(uint64(7), uint64(3))
+		Comb(uint64(7), uint64(2))
+		Comb(uint64(6), uint64(4))
+		Comb(uint64(6), uint64(3))
+		Comb(uint64(6), uint64(2))
+	}
+}
+func BenchmarkCombLarge(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Comb(uint64(30), uint64(12))
+		Comb(uint64(53), uint64(30))
+		Comb(uint64(53), uint64(23))
+	}
+}
+func suspendedTestComb(t *testing.T) {
+	testComb(6, 4, 15, t)
+	testComb(6, 3, 20, t)
+	testComb(6, 2, 15, t)
+	testComb(30, 30, 1, t)
+	testComb(7, 4, 35, t)
+	testComb(7, 3, 35, t)
+	testComb(7, 2, 21, t)
+	testComb(53, 30, 115061434509375, t)
+	testComb(53, 23, 115061434509375, t)
+	for i := 60; i > 50; i-- {
+		half := i / 2
+		testComb(i, half, 0, t)
+	}
+}
+func testComb(n, m, ex int, t *testing.T) {
+	v := Comb(uint64(n), uint64(m))
+	if v != uint64(ex) {
+		t.Errorf("Something is wrong expect %v got %v from %v,%v", ex, v, n, m)
 	}
 }
 func TestPerm(t *testing.T) {
