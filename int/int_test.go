@@ -91,7 +91,7 @@ func BenchmarkCombLarge(b *testing.B) {
 		Comb(uint64(53), uint64(23))
 	}
 }
-func suspendedTestComb(t *testing.T) {
+func TestComb(t *testing.T) {
 	testComb(6, 4, 15, t)
 	testComb(6, 3, 20, t)
 	testComb(6, 2, 15, t)
@@ -99,12 +99,22 @@ func suspendedTestComb(t *testing.T) {
 	testComb(7, 4, 35, t)
 	testComb(7, 3, 35, t)
 	testComb(7, 2, 21, t)
-	testComb(53, 30, 115061434509375, t)
-	testComb(53, 23, 115061434509375, t)
-	for i := 60; i > 50; i-- {
-		half := i / 2
-		testComb(i, half, 0, t)
-	}
+	testComb(53, 30, 623404249591760, t)
+
+	testComb(53, 23, 623404249591760, t)
+
+	testComb(49, 19, 18851684897584, t)
+	testComb(49, 20, 28277527346376, t)
+	testComb(49, 21, 39049918716424, t)
+	testComb(49, 22, 49699896548176, t)
+	testComb(49, 23, 58343356817424, t)
+
+	/*	for i := 54; i > 48; i-- {
+			half := i / 2
+			half = half - 3 //TODO remove
+			testComb(i, half, 0, t)
+		}
+	*/
 }
 func testComb(n, m, ex int, t *testing.T) {
 	v := Comb(uint64(n), uint64(m))

@@ -78,7 +78,7 @@ func Perm(n int, d int, eval func([]int) bool) (per []int) {
 	}
 	return per
 }
-func Comb(n uint64, draw uint64) (res uint64) { //TODO make a safe version. 57 over 28 look like the limit.
+func Comb2(n uint64, draw uint64) (res uint64) { //TODO make a safe version. 52 over 22 look like the limit, and we need 52 over 23
 	if n == draw {
 		res = 1
 	} else {
@@ -130,6 +130,70 @@ func Comb(n uint64, draw uint64) (res uint64) { //TODO make a safe version. 57 o
 		}
 	}
 	return res
+}
+func Comb(n uint64, draw uint64) (res uint64) { //TODO make a safe version. 52 over 23 look like the limit
+	if n == draw {
+		res = 1
+	} else {
+		if n < draw {
+			panic(fmt.Sprintf("n: %v must not be smaller than m: %v", n, draw))
+		}
+		if draw > n/2 {
+			draw = n - draw
+		}
+		nv := make([]uint64, draw)
+		dv := make([]uint64, draw)
+		for i := uint64(0); i < draw; i++ {
+			nv[i] = n - i
+			dv[i] = draw - i
+		}
+		if draw > 10 {
+			res = uint64(1)
+			reduce(nv, dv)
+			reduce(dv, nv)
+
+			for _, ni := range nv {
+				if ni != 1 {
+					res = res * ni
+				}
+			}
+
+			for _, di := range dv {
+				if di != 1 {
+					res = res / di
+				}
+			}
+		} else {
+			res = uint64(1)
+			for _, ni := range nv {
+				res = res * ni
+			}
+			for _, di := range dv {
+				res = res / di
+			}
+		}
+	}
+	return res
+}
+func reduce(nv, dv []uint64) {
+	for nix, ni := range nv {
+		r := ni
+		found := -1
+		for i := 0; i < len(dv); i++ {
+			di := dv[i]
+			if di != uint64(1) && ni > di {
+				if ni%di == 0 {
+					found = i
+					break
+				}
+			}
+		}
+		if found != -1 {
+			r = ni / dv[found]
+			dv[found] = 1
+			nv[nix] = r
+		}
+	}
 }
 
 //FactorSum finds all the possible ways to factor a sum with the numbers of elements.
